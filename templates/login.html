@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>LOGIN</h3>
+
+<form method='POST'>
+	<p>Email: <input type='email' name='email' required></p>
+	<p>Password: <input type='password' name='password' required></p>
+	<input type='submit' value='LOGIN'>
+</form>
+
+<p>Register if you want
+	<ul>
+		<li>Add your photos, recipes</li>
+		<li>Save your favorites</li>
+		<li>Comment on recipes, photos</li>
+		<button><a href="/register">Register</a></button>
+	</ul>
+
+</p>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<p>{{ recipe.rname }}</p>
+<p> <img src={{ recipe.img_url }} height="100" width="100"/></p>
+<p>{{ recipe.instructions }}</p>
+
+{%  for tool in recipe.tools %}
+	<p>{{ tool.tname }}</p>
+
+{% endfor %}
+
+{% endblock %}

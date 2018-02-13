@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div> Here are the ingridients that you have now
+<p>Image_url: {{ edit.img_url }}</p>
+<p>Cake title: {{ edit.rname }}</p>
+<p>Occasion: {{ edit_occasion.oname }}</p>
+<p>Description: {{ edit.style }}</p>
+<p>Ingredients: 
+	{% for ingridient in edit_ingridients %}
+		<ul>
+			<li> {{ ingridient.ingridient.iname }}</li>
+
+		</ul>
+	{% endfor %}
+
+</p>
+<p>Instructions: {{ edit.instructions }}</p>
+<p>Tools: </p> <br>
+
+
+ </div>
+
+<form method='POST' action="/edit_recipe">
+	<p>Upload image url: <input type='text' name='img_url' value='{{ edit.img_url}}'></p>
+	<p>Cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
+	<p>Occasion: <input type='text' name='occasion'></p>
+	<p>Description: <input type='text' name='description' value='{{ edit.style }}'></p>
+	<p>Ingredients: <input type='checkbox' name='ingridients' value='buttercream'>Buttercream
+					<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
+					<input type='checkbox' name='ingridients' value='ganache'>Ganache
+					<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
+					<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
+	<p>Instructions: <input type='text' name='instructions' value='{{ edit.instructions }}'></p>
+	<p>Tools: <input type='checkbox' name='tool' value='cake_turntable'>Cake_turntable
+			  <input type='checkbox' name='tool' value='decorating_kit'>Decorating_kit
+			  <input type='checkbox' name='tool' value='icing_comb'>Icing_comb</p>
+	<input type='submit' value='Edit'>
+	<input type='submit' value='Cancel'>
+
+</form>
+
+{% endblock %}

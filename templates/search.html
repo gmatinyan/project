@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+{% for recipe in search_results %}
+	<p> {{ recipe.rname }} <a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
+{% endfor %}
+
+
+
+{% endblock %}
