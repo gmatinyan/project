@@ -88,6 +88,8 @@ def user_info(user_id):
 	return render_template("user_profile.html", user=user, recipes=recipes)
 
 
+
+
 @app.route('/user_recipes')
 def user_recipe():
 	"""Showes all the recipes added by that user."""
@@ -100,17 +102,94 @@ def user_recipe():
 
 
 @app.route('/edit_recipe/<recipe_id>')
-def edit_user_recipe(recipe_id):
-	"""Gives users ability to edit recie."""
+def show_user_recipe(recipe_id):
+	"""Showes user the recipe that's added."""
 
 	edit = Recipe.query.filter_by(recipe_id=recipe_id).first()
 	edit_occasion = RecipeOccasion.query.filter_by(recipe_id=recipe_id).first()
 	edit_ingridients = RecipeIngridient.query.filter_by(recipe_id=recipe_id).all()
+	edit_tools = RecipeTool.query.filter_by(recipe_id=recipe_id).all()
+
+	ingridient_names = {edit_ingridient.ingridient.iname for edit_ingridient in edit_ingridients}
+
+	tool_names = {edit_tool.tool.tname for edit_tool in edit_tools}
 
 	if edit_occasion:
-		return render_template("edit_recipe.html", edit=edit, edit_occasion=edit_occasion.occasion, edit_ingridients=edit_ingridients)
+		return render_template("edit_recipe.html", edit=edit, edit_occasion=edit_occasion.occasion, ingridient_names=ingridient_names, tool_names=tool_names, edit_ingridients=edit_ingridients, edit_tools=edit_tools)
 	else:
-		return render_template("edit_recipe.html", edit=edit, edit_occasion=" ", edit_ingridients=edit_ingridients)
+		return render_template("edit_recipe.html", edit=edit, edit_occasion=" ", edit_ingridients=edit_ingridients, edit_tools=edit_tools)
+
+
+@app.route('/edit_recipe/<recipe_id>', methods=['POST'])
+def edit_user_recipe(recipe_id):
+	"""Gives users ability to edit recipe."""
+
+	user_id = session['logged_in_user']
+
+	form_img_url = request.form.get('img_url')
+	recipe_img = Recipe.query.filter_by(img_url='img_url').first()
+
+	if form_img_url != recipe_img.img_url:
+		recipe_img.img_url = form_img_url
+
+	form_title = request.form.get('title')
+	recipe_title = Recipe.query.filter_by(rname='title').first()
+
+	if form_title != recipe_title.rname:
+		recipe_title.rname = form_title
+
+	form_occasion = request.form.get('occasion').lower()
+	occasion = Occasion.query.filter_by(oname='occasion').first()
+
+	if form_occasion != occasion.oname:
+		occasion.oname = form_occasion
+
+	form_description = request.form.get('description')
+	recipe_description = Recipe.query.filter_by(style='description').first()
+
+	if form_description != recipe_description.style:
+		recipe_description.style = form_description
+
+	
+	form_ingridients = request.form.getlist('ingridients')
+
+	ingridient_ids = []
+
+	for ingridient in form_ingridients:
+		ingridient_id = ingridient.query.filter_by(iname=ingridient).first()
+		ingridient_ids.append(ingridient_id)
+	
+	recipeingridients = RecipeIngridient.query.filter_by(recipe_id=recipe_id).all()
+
+	for recipeingredient_obj in recipeingredients:
+		if  recipeingredient_obj.ingridient_id not in ingridient_ids:
+			db.session.delete(recipeingredient_obj)
+
+	for ingridient_id in ingridient_ids:
+		if ingridient_id not in recipeingredients_obj:
+			db.session.add(recipeingredient_obj)
+
+
+	#form_ings = get all checked ingredients from the form
+	#db_ings = get all recipieingredients.ingredients from the db
+	#for db_ing in db_ings:
+		#if ing.iname not in form_ings:
+			#delete recipeingredient from db
+
+	#for form_ing in form_ings:
+		#if form_ing not in db_ings:
+			#add new recipeingredient to db
+
+	form_instructions = request.form.get('instructions')
+	recipe_instructions = Recipe.query.filter_by(ingridients=instructions).first()
+
+	if form_instructions != recipe_instructions.instructions:
+		recipe_instructions.instructions = form_instructions
+
+
+	db.session.commit()
+
+	return redirect("/user_profile/{}".format(user_id))
 
 
 
@@ -190,7 +269,6 @@ def add_new_recipe():
 
 	description = request.form.get('description')
 	ingridients = request.form.getlist('ingridients')
-	print ingridients
 	instructions = request.form.get('instructions')
 	tools = request.form.getlist('tools')
 
@@ -206,14 +284,14 @@ def add_new_recipe():
 	db.session.add(new_recipe_occasion)
 
 	for ingridient in ingridients:
-		ingreident_obj=Ingridient.query.filter_by(iname=ingridient).first()
+		ingreident_obj = Ingridient.query.filter_by(iname=ingridient).first()
 		recipe_ingrident = RecipeIngridient(ingridient_id=ingreident_obj.ingridient_id, recipe_id=new_recipe.recipe_id)
 		db.session.add(recipe_ingrident)
 	for tool in tools:
-		recipe_tool = RecipeTool(tool_id=tool, recipe_id=new_recipe.recipe_id)
+		tool_obj = Tool.query.filter_by(tname=tool).first()
+		recipe_tool = RecipeTool(tool_id=tool_obj.tool_id, recipe_id=new_recipe.recipe_id)
 		db.session.add(recipe_tool)
 
-	# db.session.add_all([recipe_ingrident, recipe_tool])
 	db.session.commit()
 
 	return redirect("/user_profile/{}".format(user_id))

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div> Here are the ingridients that you have now
+<div> Here are the recipe that you have now
 <p>Image_url: {{ edit.img_url }}</p>
 <p>Cake title: {{ edit.rname }}</p>
 <p>Occasion: {{ edit_occasion.oname }}</p>
@@ -12,28 +12,38 @@
 
 		</ul>
 	{% endfor %}
-
 </p>
 <p>Instructions: {{ edit.instructions }}</p>
-<p>Tools: </p> <br>
+<p>Tools: 
+	{% for tool in edit_tools %}
+		<ul>
+			<li>{{ tool.tool.tname }}</li>
+		</ul>
+	{% endfor %}
+</p> <br>
 
 
  </div>
 
 <form method='POST' action="/edit_recipe">
-	<p>Upload image url: <input type='text' name='img_url' value='{{ edit.img_url}}'></p>
-	<p>Cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
-	<p>Occasion: <input type='text' name='occasion'></p>
-	<p>Description: <input type='text' name='description' value='{{ edit.style }}'></p>
-	<p>Ingredients: <input type='checkbox' name='ingridients' value='buttercream'>Buttercream
-					<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
-					<input type='checkbox' name='ingridients' value='ganache'>Ganache
-					<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
-					<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
-	<p>Instructions: <input type='text' name='instructions' value='{{ edit.instructions }}'></p>
-	<p>Tools: <input type='checkbox' name='tool' value='cake_turntable'>Cake_turntable
-			  <input type='checkbox' name='tool' value='decorating_kit'>Decorating_kit
-			  <input type='checkbox' name='tool' value='icing_comb'>Icing_comb</p>
+	<p>Edit image url: <input type='text' name='img_url' value='{{ edit.img_url}}'></p>
+	<p>Edit cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
+	<p>Edit occasion: <input type='text' name='occasion' value='{{ edit_occasion.oname }}'></p>
+	<p>Edit description: <input type='text' name='description' value='{{ edit.style }}'></p>
+	<p>Edit ingredients: <input type='checkbox' name='ingridients' value='buttercream' {% if 'buttercream' in ingridient_names %}
+					checked {% endif %}>Buttercream
+					<input type='checkbox' name='ingridients' value='whipped_cream' {% if 'whipped_cream' in ingridient_names %}
+					checked {% endif %}>Whipped_cream
+					<input type='checkbox' name='ingridients' value='ganache' {% if 'ganache' in ingridient_names %}
+					checked {% endif %}>Ganache
+					<input type='checkbox' name='ingridients' value='royal_icing' {% if 'royal_icing' in ingridient_names %}
+					checked {%  endif %}>Royal_icing
+					<input type='checkbox' name='ingridients' value='fondant' {% if 'fondant' in ingridient_names %}
+					checked {%  endif %}>Fondant</p>
+	<p>Edit instructions: <input type='text' name='instructions' value='{{ edit.instructions }}'></p>
+	<p>Edit tools: <input type='checkbox' name='tool' value='cake_turntable' {% if 'cake_turntable' in tool_names %} checked {% endif %}>Cake_turntable
+			  <input type='checkbox' name='tool' value='decorating_kit' {% if 'decorating_kit' in tool_names %} checked {% endif %}>Decorating_kit
+			  <input type='checkbox' name='tool' value='icing_comb' {% if 'icing_comb' in tool_names %} checked {% endif %}>Icing_comb</p>
 	<input type='submit' value='Edit'>
 	<input type='submit' value='Cancel'>
 
