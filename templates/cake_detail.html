@@ -1,13 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<p>{{ recipe.rname }}</p>
+<h3>Cake details</h3>
+
+<h4> {{ recipe.rname }} cake </h4>
 <p> <img src={{ recipe.img_url }} height="100" width="100"/></p>
-<p>{{ recipe.instructions }}</p>
+<p> Occasion: {{ recipe.occasions[0].oname }}</p>
+<p> Description: {{ recipe.style }}</p>
+<p> Ingridients: {% for ingridient in recipe.ingridients %}
+						<ul>
+							<li>{{ ingridient.iname }}</li>
+						</ul>
+				  {% endfor %}
+</p>	
 
-{%  for tool in recipe.tools %}
-	<p>{{ tool.tname }}</p>
+<p>Instructions: {{ recipe.instructions }}</p>
 
-{% endfor %}
+<p> Tools: {%  for tool in recipe.tools %}
+				<ul>
+					<li>{{ tool.tname }}</li>
+				</ul>
+		   {% endfor %}
+</p>
 
-{% endblock %}
+{% if 'logged_in_user' in session %}
+	<a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a>
+{% endif %}
+
+
+{% endblock %} 

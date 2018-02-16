@@ -1,31 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<div> Here are the recipe that you have now
-<p>Image_url: {{ edit.img_url }}</p>
-<p>Cake title: {{ edit.rname }}</p>
-<p>Occasion: {{ edit_occasion.oname }}</p>
-<p>Description: {{ edit.style }}</p>
-<p>Ingredients: 
-	{% for ingridient in edit_ingridients %}
-		<ul>
-			<li> {{ ingridient.ingridient.iname }}</li>
+<h3> Here are the recipe that you have now</h3>
 
-		</ul>
-	{% endfor %}
-</p>
-<p>Instructions: {{ edit.instructions }}</p>
-<p>Tools: 
-	{% for tool in edit_tools %}
-		<ul>
-			<li>{{ tool.tool.tname }}</li>
-		</ul>
-	{% endfor %}
-</p> <br>
-
-
- </div>
-
-<form method='POST' action="/edit_recipe">
+<form method='POST' action="/edit_recipe/{{ recipe_id }}">
 	<p>Edit image url: <input type='text' name='img_url' value='{{ edit.img_url}}'></p>
 	<p>Edit cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
 	<p>Edit occasion: <input type='text' name='occasion' value='{{ edit_occasion.oname }}'></p>
@@ -41,11 +18,10 @@
 					<input type='checkbox' name='ingridients' value='fondant' {% if 'fondant' in ingridient_names %}
 					checked {%  endif %}>Fondant</p>
 	<p>Edit instructions: <input type='text' name='instructions' value='{{ edit.instructions }}'></p>
-	<p>Edit tools: <input type='checkbox' name='tool' value='cake_turntable' {% if 'cake_turntable' in tool_names %} checked {% endif %}>Cake_turntable
-			  <input type='checkbox' name='tool' value='decorating_kit' {% if 'decorating_kit' in tool_names %} checked {% endif %}>Decorating_kit
-			  <input type='checkbox' name='tool' value='icing_comb' {% if 'icing_comb' in tool_names %} checked {% endif %}>Icing_comb</p>
-	<input type='submit' value='Edit'>
-	<input type='submit' value='Cancel'>
+	<p>Edit tools: <input type='checkbox' name='tools' value='cake_turntable' {% if 'cake_turntable' in tool_names %} checked {% endif %}>Cake_turntable
+			  <input type='checkbox' name='tools' value='decorating_kit' {% if 'decorating_kit' in tool_names %} checked {% endif %}>Decorating_kit
+			  <input type='checkbox' name='tools' value='icing_comb' {% if 'icing_comb' in tool_names %} checked {% endif %}>Icing_comb</p>
+	<input type='submit' value='Save'>
 
 </form>
 

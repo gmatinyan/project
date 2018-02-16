@@ -4,11 +4,17 @@
 <h3>Register</h3>
 
 <form method='POST'>
-	<p>First name <input type='text' name='fname'></p>
-	<p>Last name <input type='text' name='lname'></p>
-	<p>Email: <input type='email' name='email'></p>
-	<p>Password: <input type='password' name='password'></p>
-	<input type='submit' value='REGISTER'>
+	<dl>
+		<dt>First name: 
+		<dd><input type='text' name='fname' required>
+		<dt>Last name: 
+		<dd><input type='text' name='lname' required>
+		<dt>Email: 
+		<dd><input type='email' name='email' required>
+		<dt>Password: 
+		<dd><input type='password' name='password' required>
+		<p><dd><input type='submit' value='REGISTER'></p>
+	</dl>
 </form>
 
 

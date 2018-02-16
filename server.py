@@ -68,11 +68,14 @@ def login_process():
 	if user:
 		if password == user.password:
 			session['logged_in_user'] = user.user_id
+			flash("Logged in")
 			return redirect("/user_profile/{}".format(user.user_id))
 		else:
+			flash("Login failed")
 			return redirect("/login")
 
 	else:
+		flash("You are not yet registered")
 		return redirect ("/register")
 
 
@@ -81,12 +84,13 @@ def login_process():
 def user_info(user_id):
 	"""Display user page."""
 
-	user = User.query.get(user_id)
-	recipes = Recipe.query.all()
-	#recipes = set(recipes)
-
-	return render_template("user_profile.html", user=user, recipes=recipes)
-
+	if 'logged_in_user' in session:
+		user = User.query.get(user_id)
+		recipes = Recipe.query.all()
+	
+		return render_template("user_profile.html", user=user, recipes=recipes)
+	else:
+		return redirect('/')
 
 
 
@@ -114,11 +118,12 @@ def show_user_recipe(recipe_id):
 
 	tool_names = {edit_tool.tool.tname for edit_tool in edit_tools}
 
-	if edit_occasion:
-		return render_template("edit_recipe.html", edit=edit, edit_occasion=edit_occasion.occasion, ingridient_names=ingridient_names, tool_names=tool_names, edit_ingridients=edit_ingridients, edit_tools=edit_tools)
-	else:
-		return render_template("edit_recipe.html", edit=edit, edit_occasion=" ", edit_ingridients=edit_ingridients, edit_tools=edit_tools)
-
+	
+	return render_template("edit_recipe.html", edit=edit, edit_occasion=edit_occasion.occasion, 
+												   recipe_id=recipe_id, ingridient_names=ingridient_names, 
+												   tool_names=tool_names, edit_ingridients=edit_ingridients, 
+												   edit_tools=edit_tools)
+	
 
 @app.route('/edit_recipe/<recipe_id>', methods=['POST'])
 def edit_user_recipe(recipe_id):
@@ -127,28 +132,26 @@ def edit_user_recipe(recipe_id):
 	user_id = session['logged_in_user']
 
 	form_img_url = request.form.get('img_url')
-	recipe_img = Recipe.query.filter_by(img_url='img_url').first()
+	recipe = Recipe.query.get(recipe_id)
 
-	if form_img_url != recipe_img.img_url:
-		recipe_img.img_url = form_img_url
+	if form_img_url != recipe.img_url:
+		recipe.img_url = form_img_url
 
 	form_title = request.form.get('title')
-	recipe_title = Recipe.query.filter_by(rname='title').first()
 
-	if form_title != recipe_title.rname:
-		recipe_title.rname = form_title
+	if form_title != recipe.rname:
+		recipe.rname = form_title
 
 	form_occasion = request.form.get('occasion').lower()
-	occasion = Occasion.query.filter_by(oname='occasion').first()
+	occasion = recipe.occasions[0]
 
 	if form_occasion != occasion.oname:
 		occasion.oname = form_occasion
 
 	form_description = request.form.get('description')
-	recipe_description = Recipe.query.filter_by(style='description').first()
-
-	if form_description != recipe_description.style:
-		recipe_description.style = form_description
+	
+	if form_description != recipe.style:
+		recipe.style = form_description
 
 	
 	form_ingridients = request.form.getlist('ingridients')
@@ -156,35 +159,60 @@ def edit_user_recipe(recipe_id):
 	ingridient_ids = []
 
 	for ingridient in form_ingridients:
-		ingridient_id = ingridient.query.filter_by(iname=ingridient).first()
+		ingridient_id = Ingridient.query.filter_by(iname=ingridient).first().ingridient_id
 		ingridient_ids.append(ingridient_id)
 	
 	recipeingridients = RecipeIngridient.query.filter_by(recipe_id=recipe_id).all()
 
-	for recipeingredient_obj in recipeingredients:
+
+	for recipeingredient_obj in recipeingridients:
 		if  recipeingredient_obj.ingridient_id not in ingridient_ids:
 			db.session.delete(recipeingredient_obj)
 
+	recipeingridient_ids = []
+
+	for recipeingridient in recipeingridients:
+		recipeingridient_id = recipeingridient.ingridient_id
+		recipeingridient_ids.append(recipeingridient_id)
+
 	for ingridient_id in ingridient_ids:
-		if ingridient_id not in recipeingredients_obj:
-			db.session.add(recipeingredient_obj)
+		if ingridient_id not in recipeingridient_ids:
+			new_recipe_ingridient = RecipeIngridient(recipe_id=recipe_id, ingridient_id=ingridient_id)
+			db.session.add(new_recipe_ingridient)
 
-
-	#form_ings = get all checked ingredients from the form
-	#db_ings = get all recipieingredients.ingredients from the db
-	#for db_ing in db_ings:
-		#if ing.iname not in form_ings:
-			#delete recipeingredient from db
-
-	#for form_ing in form_ings:
-		#if form_ing not in db_ings:
-			#add new recipeingredient to db
 
 	form_instructions = request.form.get('instructions')
-	recipe_instructions = Recipe.query.filter_by(ingridients=instructions).first()
+	
 
-	if form_instructions != recipe_instructions.instructions:
-		recipe_instructions.instructions = form_instructions
+	if form_instructions != recipe.instructions:
+		recipe.instructions = form_instructions
+
+
+	form_tools = request.form.getlist('tools')
+
+	tool_ids = []
+
+	for tool in form_tools:
+		tool_id = Tool.query.filter_by(tname=tool).first().tool_id
+		tool_ids.append(tool_id)
+
+	recipetools = RecipeTool.query.filter_by(recipe_id=recipe_id).all()
+
+	for recipetool_obj in recipetools:
+		if recipetool_obj.tool_id not in tool_ids:
+			db.session.delete(recipetool_obj)
+
+	recipetool_ids = []
+
+	for recipetool in recipetools:
+		recipetool_id = recipetool.tool_id
+		recipetool_ids.append(recipetool_id)
+
+	for tool_id in tool_ids:
+		if tool_id not in recipetool_ids:
+			new_recipe_tool = RecipeTool(recipe_id=recipe_id, tool_id=tool_id)
+			db.session.add(new_recipe_tool)
+
 
 
 	db.session.commit()
@@ -200,6 +228,7 @@ def logout():
 	"""Log out user."""
 
 	session.clear()
+	flash("Logged out.")
 	return redirect('/')
 
 
@@ -227,8 +256,10 @@ def verify_user():
 		db.session.add(new_user)
 		db.session.commit()
 		session['logged_in_user'] = new_user.user_id
+		flash("Registerd.")
 		return redirect("/user_profile/{}".format(new_user.user_id))
 	else:
+		flash("Please log in, you've already had account.")
 		return redirect('/login')
 
 
@@ -241,6 +272,7 @@ def detaild_cake_view(recipe_id):
 	
 
 	return render_template("cake_detail.html", recipe=recipe) 
+
 
 @app.route('/add_new_recipe', methods=['GET'])
 def show_new_recipe_form():

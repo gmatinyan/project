@@ -73,6 +73,8 @@ class Ingridient(db.Model):
 	ingridient_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	iname = db.Column(db.String(50), nullable=False)
 
+	tool_ingridients = db.relationship("Recipe", secondary="recipe_ingridients", backref="ingridients")
+
 	def __repr__(self):
 		"""Provide helpful representation when printed."""
 
@@ -186,6 +188,16 @@ class RecipeOccasion(db.Model):
 
 def example_data():
 	"""Add data to database.""" 
+
+	User.query.delete()
+	Recipe.query.delete()
+	Favorite.query.delete()
+	Ingridient.query.delete()
+	RecipeIngridient.query.delete()
+	RecipeTool.query.delete()
+	Tool.query.delete()
+	Occasion.query.delete()
+	RecipeOccasion.query.delete()
 
 	gohar = User(fname='Gohar', lname='Matinyan', email='gm@gmail.com', password='123')
 	andrey = User(fname='Andrey', lname='Khalpakhchyan', email='ak@gmail.com', password='abc')
