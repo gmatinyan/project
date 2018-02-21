@@ -1,9 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
+
 <h3>Cake details</h3>
 
 <h4> {{ recipe.rname }} cake </h4>
+
+{% if avg_score %}
+	<p>Average score for this recipe is: {{ avg_score|round(1, 'ceil') }}</p>
+{% endif %}
+
+{% if user_rating %}
+	<p> Your scor for this recipe is: {{ user_rating.score }}  </p>
+{%  endif %}
+	
+{% if 'logged_in_user' in session %}
+	<p>Rate this recipe
+	<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
+		<select name="ratings">
+			<option value="1" name="score">1</option>
+			<option value="2" name="score">2</option>
+			<option value="3" name="score">3</option>
+			<option value="4" name="score">4</option>
+			<option value="5" name="score">5</option>
+		</select>
+		<input type="submit" value="Rate">
+	</form> </p>
+{% endif %}
+
+
+
 <p> <img src={{ recipe.img_url }} height="100" width="100"/></p>
 <p> Occasion: {{ recipe.occasions[0].oname }}</p>
 <p> Description: {{ recipe.style }}</p>
@@ -23,9 +50,18 @@
 		   {% endfor %}
 </p>
 
+{% if 'logged_in_user' in session and session['logged_in_user'] == recipe.user_id %}
+	<p><a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a></p>
+{% endif %}
+
 {% if 'logged_in_user' in session %}
-	<a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a>
+	<p><a href="/add_to_favorite/{{ recipe.recipe_id }}">Add to favorites</a></p>
 {% endif %}
 
 
+{% if 'logged_in_user' in session %}
+	<button><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button>
+{% else %}
+	<button><a href="/">Back</a></button>
+{% endif %}
 {% endblock %} 

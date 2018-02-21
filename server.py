@@ -7,8 +7,10 @@ from model import connect_to_db, db
 from flask import (Flask, render_template, redirect, request, flash,
                    session)
 
+from sqlalchemy.sql import func
 
-from model import User, Recipe, Favorite, Ingridient, RecipeIngridient, Tool, RecipeTool, Occasion, RecipeOccasion
+
+from model import User, Recipe, Rating, Favorite, Ingridient, RecipeIngridient, Tool, RecipeTool, Occasion, RecipeOccasion
 
 app = Flask(__name__)
 
@@ -46,6 +48,9 @@ def search_cake():
 
 	search_results += recipe_names
 
+	search_results = set(search_results)
+
+
 	return render_template('search.html', search_results=search_results)
 
 
@@ -65,11 +70,15 @@ def login_process():
 
 	user = User.query.filter_by(email=email).first()
 
+
 	if user:
 		if password == user.password:
 			session['logged_in_user'] = user.user_id
 			flash("Logged in")
 			return redirect("/user_profile/{}".format(user.user_id))
+		elif password != user.password:
+			flash("Incorrect password.")
+			return redirect('/login')
 		else:
 			flash("Login failed")
 			return redirect("/login")
@@ -131,95 +140,136 @@ def edit_user_recipe(recipe_id):
 
 	user_id = session['logged_in_user']
 
-	form_img_url = request.form.get('img_url')
-	recipe = Recipe.query.get(recipe_id)
+	if "logged_in_user" in session:
 
-	if form_img_url != recipe.img_url:
-		recipe.img_url = form_img_url
+		form_img_url = request.form.get('img_url')
+		recipe = Recipe.query.get(recipe_id)
 
-	form_title = request.form.get('title')
+		if form_img_url != recipe.img_url:
+			recipe.img_url = form_img_url
 
-	if form_title != recipe.rname:
-		recipe.rname = form_title
+		form_title = request.form.get('title')
 
-	form_occasion = request.form.get('occasion').lower()
-	occasion = recipe.occasions[0]
+		if form_title != recipe.rname:
+			recipe.rname = form_title
 
-	if form_occasion != occasion.oname:
-		occasion.oname = form_occasion
+		form_occasion = request.form.get('occasion').lower()
+		occasion = recipe.occasions[0]
 
-	form_description = request.form.get('description')
-	
-	if form_description != recipe.style:
-		recipe.style = form_description
+		if form_occasion != occasion.oname:
+			occasion.oname = form_occasion
 
-	
-	form_ingridients = request.form.getlist('ingridients')
+		form_description = request.form.get('description')
+		
+		if form_description != recipe.style:
+			recipe.style = form_description
 
-	ingridient_ids = []
+		
+		form_ingridients = request.form.getlist('ingridients')
 
-	for ingridient in form_ingridients:
-		ingridient_id = Ingridient.query.filter_by(iname=ingridient).first().ingridient_id
-		ingridient_ids.append(ingridient_id)
-	
-	recipeingridients = RecipeIngridient.query.filter_by(recipe_id=recipe_id).all()
+		ingridient_ids = []
 
-
-	for recipeingredient_obj in recipeingridients:
-		if  recipeingredient_obj.ingridient_id not in ingridient_ids:
-			db.session.delete(recipeingredient_obj)
-
-	recipeingridient_ids = []
-
-	for recipeingridient in recipeingridients:
-		recipeingridient_id = recipeingridient.ingridient_id
-		recipeingridient_ids.append(recipeingridient_id)
-
-	for ingridient_id in ingridient_ids:
-		if ingridient_id not in recipeingridient_ids:
-			new_recipe_ingridient = RecipeIngridient(recipe_id=recipe_id, ingridient_id=ingridient_id)
-			db.session.add(new_recipe_ingridient)
+		for ingridient in form_ingridients:
+			ingridient_id = Ingridient.query.filter_by(iname=ingridient).first().ingridient_id
+			ingridient_ids.append(ingridient_id)
+		
+		recipeingridients = RecipeIngridient.query.filter_by(recipe_id=recipe_id).all()
 
 
-	form_instructions = request.form.get('instructions')
-	
+		for recipeingredient_obj in recipeingridients:
+			if  recipeingredient_obj.ingridient_id not in ingridient_ids:
+				db.session.delete(recipeingredient_obj)
 
-	if form_instructions != recipe.instructions:
-		recipe.instructions = form_instructions
+		recipeingridient_ids = []
 
+		for recipeingridient in recipeingridients:
+			recipeingridient_id = recipeingridient.ingridient_id
+			recipeingridient_ids.append(recipeingridient_id)
 
-	form_tools = request.form.getlist('tools')
-
-	tool_ids = []
-
-	for tool in form_tools:
-		tool_id = Tool.query.filter_by(tname=tool).first().tool_id
-		tool_ids.append(tool_id)
-
-	recipetools = RecipeTool.query.filter_by(recipe_id=recipe_id).all()
-
-	for recipetool_obj in recipetools:
-		if recipetool_obj.tool_id not in tool_ids:
-			db.session.delete(recipetool_obj)
-
-	recipetool_ids = []
-
-	for recipetool in recipetools:
-		recipetool_id = recipetool.tool_id
-		recipetool_ids.append(recipetool_id)
-
-	for tool_id in tool_ids:
-		if tool_id not in recipetool_ids:
-			new_recipe_tool = RecipeTool(recipe_id=recipe_id, tool_id=tool_id)
-			db.session.add(new_recipe_tool)
+		for ingridient_id in ingridient_ids:
+			if ingridient_id not in recipeingridient_ids:
+				new_recipe_ingridient = RecipeIngridient(recipe_id=recipe_id, ingridient_id=ingridient_id)
+				db.session.add(new_recipe_ingridient)
 
 
+		form_instructions = request.form.get('instructions')
+		
 
+		if form_instructions != recipe.instructions:
+			recipe.instructions = form_instructions
+
+
+		form_tools = request.form.getlist('tools')
+
+		tool_ids = []
+
+		for tool in form_tools:
+			tool_id = Tool.query.filter_by(tname=tool).first().tool_id
+			tool_ids.append(tool_id)
+
+		recipetools = RecipeTool.query.filter_by(recipe_id=recipe_id).all()
+
+		for recipetool_obj in recipetools:
+			if recipetool_obj.tool_id not in tool_ids:
+				db.session.delete(recipetool_obj)
+
+		recipetool_ids = []
+
+		for recipetool in recipetools:
+			recipetool_id = recipetool.tool_id
+			recipetool_ids.append(recipetool_id)
+
+		for tool_id in tool_ids:
+			if tool_id not in recipetool_ids:
+				new_recipe_tool = RecipeTool(recipe_id=recipe_id, tool_id=tool_id)
+				db.session.add(new_recipe_tool)
+
+
+
+		db.session.commit()
+
+		return redirect("/user_profile/{}".format(user_id))
+	else:
+		return redirect('/')
+
+
+@app.route('/favorites')
+def show_favorite_recipes():
+	"""Shows users personal collection of recipes."""
+
+	user_id = session['logged_in_user']
+
+	favorites = Favorite.query.filter_by(user_id=user_id).all()
+
+	return render_template("user_favorite.html", user_id=user_id, favorites=favorites)
+
+
+@app.route('/add_to_favorite/<recipe_id>')
+def add_to_favorite(recipe_id):
+	"""Adds recipe to user's personal collection. """
+
+	user_id = session['logged_in_user']
+
+
+	favorite = Favorite(recipe_id=recipe_id, user_id=user_id)
+	db.session.add(favorite)
 	db.session.commit()
 
-	return redirect("/user_profile/{}".format(user_id))
 
+	return redirect('/favorites')
 
+@app.route('/delete_from_favorites/<recipe_id>')
+def del_from_favorites(recipe_id):
+	"""Delete recipe from favorites"""
+
+	user_id = session['logged_in_user']
+
+	del_favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+	db.session.delete(del_favorite)
+	db.session.commit()
+
+	return redirect('/favorites')
 
 
 
@@ -269,14 +319,50 @@ def detaild_cake_view(recipe_id):
 	"""cake detaild view."""
 
 	recipe = Recipe.query.get(recipe_id)
-	
 
-	return render_template("cake_detail.html", recipe=recipe) 
+	avg_score = db.session.query(func.avg(Rating.score).label('average')).filter_by(recipe_id=recipe_id).scalar()
+
+	if "logged_in_user" in session:
+
+		user_id = session['logged_in_user']
+
+		if user_id:
+			user_rating = Rating.query.filter_by(recipe_id=recipe_id, user_id=user_id).first()
+		else:
+			user_rating = None		
+
+		return render_template("cake_detail.html", recipe=recipe, user_rating=user_rating, avg_score=None) 
+
+	else:
+		return render_template("cake_detail.html", recipe=recipe, user_rating=None, avg_score=avg_score)
+
+
+@app.route('/add-rating/<recipe_id>', methods=['POST'])
+def add_rating(recipe_id):
+	"""Adding/Editing rating."""
+
+	score = request.form.get('ratings')
+	user_id = session['logged_in_user']
+
+	rating = Rating.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+	if rating:
+		rating.score = score
+		flash("Rating updated.")
+	else:
+		rating = Rating(recipe_id=recipe_id, user_id=user_id, score=score)
+		flash("Rating added.")
+		db.session.add(rating)
+	
+	db.session.commit()
+
+	return redirect('/recipe/{}'.format(recipe_id))
+
 
 
 @app.route('/add_new_recipe', methods=['GET'])
 def show_new_recipe_form():
-	"""Show add new recipe form"""
+	"""Shows add new recipe form"""
 
 
 	return render_template("add_new_recipe.html")
@@ -296,7 +382,7 @@ def add_new_recipe():
 	occasion_check = Occasion.query.filter_by(oname=occasion).first()
 
 	if not occasion_check:
-		new_occasion = Occasion(oname = occasion)
+		new_occasion = Occasion(oname=occasion)
 		db.session.add(new_occasion)
 
 	description = request.form.get('description')

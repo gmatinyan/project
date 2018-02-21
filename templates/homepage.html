@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div>
+<p>
   	<a href="/homepage"><img src='https://thumb7.shutterstock.com/display_pic_with_logo/3873872/725632057/stock-vector-cake-logo-725632057.jpg' alt='navbar-logo' height='30' width='30'/></a>
     <form action="/search">
     	<input type="text" placeholder="Search" name="search">
     	<input type="submit" value = "SEARCH">
    	</form>
-    <a href="/login">LOGIN</a>
-</div>
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+</p>
 
 	
 {% for recipe in recipes %}
-	<p> {{ recipe.rname }} <a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
+	<p> {{ recipe.rname }} <a href="/recipe/{{ recipe.recipe_id }}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
 {% endfor %}
 
 

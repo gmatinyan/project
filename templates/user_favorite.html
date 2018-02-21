@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>my favorite recipes</h3>
+
+
+{% for favorite in favorites %}
+	<p>  {{ favorite.recipe_favorite.rname }} <a href="/recipe/{{ favorite.recipe_favorite.recipe_id }}"> <img src={{ favorite.recipe_favorite.img_url }} height="100" width="100" /></a>
+	<a href="/delete_from_favorites/{{ favorite.recipe_favorite.recipe_id }}">Delete</a></p>
+{% endfor %}
+
+<button><a href="/user_profile/{{ user_id }}">Back</a></button>
+
+
+{% endblock %}

@@ -31,7 +31,7 @@ class Recipe(db.Model):
 	rname = db.Column(db.String(100), nullable=False)
 	instructions = db.Column(db.String(500), nullable=False)
 	style = db.Column(db.String(100), nullable=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
 	img_url = db.Column(db.String(700), nullable=False)
 
 	# Define relationship to users
@@ -40,8 +40,31 @@ class Recipe(db.Model):
 	def __repr__(self):
 		"""Provide helpful representation when printed."""
 
-		return "<Recipe recipe_id={}, rname={},>".format(self.recipe_id, 
-														 self.rname)
+		return "<Recipe recipe_id={}, rname={}, user_id={},>".format(self.recipe_id, 
+														 			 self.rname, 
+														 			 self.user_id)
+
+
+class Rating(db.Model):
+	"""Rating information."""
+
+	__tablename__ = "ratings"
+
+	rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+	recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'), nullable=False)
+	score = db.Column(db.Integer, nullable=False)
+
+	user_rating = db.relationship("User", backref="ratings")
+
+	recipe_rating = db.relationship("Recipe", backref="ratings")
+
+	def __repr__(self):
+		"""Provide helpful representation when printed."""
+
+		return "<rating_id={} score={}>".format(self.rating_id, self.score)
+
+
 
 class Favorite(db.Model):
 	"""Favorite information."""
@@ -100,8 +123,8 @@ class RecipeIngridient(db.Model):
 		"""Provide helpful representation when printed."""
 
 		return "<RecipeIngridient ri_id={}, recipe_id={}, ingridient_id={}>".format(self.ri_id, 
-																					 self.recipe_id, 
-																					 self.ingridient_id)
+																					self.recipe_id, 
+																					self.ingridient_id)
 
 
 class RecipeTool(db.Model):
@@ -182,8 +205,8 @@ class RecipeOccasion(db.Model):
 		"""Provide helpful representation when printed."""
 
 		return "<RecipeOccasion ro_id={}, recipe_id={}, occasion_id={}>".format(self.ro_id,
-																				 self.recipe_id,
-																				 self.occasion_id)
+																				self.recipe_id,
+																				self.occasion_id)
 
 
 def example_data():
@@ -240,11 +263,23 @@ def example_data():
 
 	
 
+	
+	
+	db.session.add_all([gohar, andrey, lilit])
+	db.session.commit()
+	
 
-	db.session.add_all([gohar, andrey, lilit, buttercream, whipped_cream, ganache, royal_icing, fondant, 
+	db.session.add_all([rwedding, rbirthday, rgraduation, rbaptism])
+	db.session.commit()
+		
+
+
+	db.session.add_all([buttercream, whipped_cream, ganache, royal_icing, fondant, 
 						cake_turntable, decorating_kit, icing_comb, wedding, 
-						birthday, graduation, baptism, rwedding, rbirthday, rgraduation, rbaptism, rt1, rt2, 
+						birthday, graduation, baptism, rt1, rt2, 
 						rt3, rt4, ri1, ri2, ri3, ri4, ro1, ro2, ro3, ro4])
+
+	
 	db.session.commit()
 
 

@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h3>Favorite recipes</h3>
+
 
 {% for recipe in user_recipes %}
 	<p> {{ recipe.rname }} <a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
 	<a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a>
 {% endfor %}
+
+
+{% if 'logged_in_user' in session %}
+	<p><button><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button></p>
+{% endif %}
 
 
 {% endblock %}
