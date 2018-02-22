@@ -289,11 +289,11 @@ def example_data():
 
 
 
-def connect_to_db(app):
+def connect_to_db(app, uri='postgresql:///recipe-db'):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///recipe-db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
