@@ -306,8 +306,7 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     print "Connected to DB."
-    connect_to_db(app)
-    db.create_all()
-    example_data()
+    # db.create_all()
+    # example_data()
 
 

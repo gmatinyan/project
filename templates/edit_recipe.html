@@ -2,8 +2,9 @@
 {% block content %}
 <h3> Here are the recipe that you have now</h3>
 
-<form method='POST' action="/edit_recipe/{{ recipe_id }}">
-	<p>Edit image url: <input type='text' name='img_url' value='{{ edit.img_url}}'></p>
+<form method='POST' action="/edit_recipe/{{ recipe_id }}" enctype="multipart/form-data">
+	
+	<p>Edit image<input type='file' name='file' accept="image/*" multiple> </p>
 	<p>Edit cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
 	<p>Edit occasion: <input type='text' name='occasion' value='{{ edit_occasion.oname }}'></p>
 	<p>Edit description: <input type='text' name='description' value='{{ edit.style }}'></p>

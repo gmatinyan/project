@@ -1,18 +1,26 @@
+import os
 from jinja2 import StrictUndefined
 
-from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
-from flask import (Flask, render_template, redirect, request, flash,
-                   session)
+from flask import Flask, render_template, redirect, request, flash, session, url_for, send_from_directory
+
+from werkzeug.utils import secure_filename
 
 from sqlalchemy.sql import func
 
 
 from model import User, Recipe, Rating, Favorite, Ingridient, RecipeIngridient, Tool, RecipeTool, Occasion, RecipeOccasion
 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 app = Flask(__name__)
+
+
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg', 'gif', 'jfif'])
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "goga"
@@ -31,7 +39,7 @@ def index():
 	recipes = Recipe.query.all()
 	# make a second query for occasions
 	
-	return render_template("homepage.html", recipes=recipes)
+	return render_template("homepage.html", recipes=recipes, enumerate=enumerate)
 
 @app.route('/search')
 def search_cake():
@@ -99,7 +107,7 @@ def user_info(user_id):
 		user = User.query.get(user_id)
 		recipes = Recipe.query.all()
 	
-		return render_template("homepage.html", user=user, recipes=recipes)
+		return render_template("homepage.html", user=user, recipes=recipes, enumerate=enumerate)
 	else:
 		return redirect('/')
 
@@ -110,7 +118,7 @@ def user_recipe():
 	"""Showes all the recipes added by that user."""
 
 	#query recipe tabel to get recipes by user.id
-	
+
 	user_id = session['logged_in_user']
 	user_recipes = Recipe.query.filter_by(user_id=user_id).all()
 
@@ -148,13 +156,27 @@ def edit_user_recipe(recipe_id):
 
 	user_id = session['logged_in_user']
 
-	
-
-	form_img_url = request.form.get('img_url')
 	recipe = Recipe.query.get(recipe_id)
 
-	if form_img_url != recipe.img_url:
-		recipe.img_url = form_img_url
+	target = os.path.join(APP_ROOT, 'uploads/')
+
+	print "target:", target
+	print request.files.getlist('file')
+
+	if request.files.getlist('file') != "":
+		for upload in request.files.getlist('file'):
+			filename = upload.filename
+			print 'filename:', filename
+			#Verifys if files are supported
+			ext = os.path.splitext(filename)[1]
+			if ext in ALLOWED_EXTENSIONS:
+				flash('File extension supported.')
+			else:
+				flash('Upload a valid file.')
+			destination = "".join([target, filename])
+			upload.save(destination)
+			print "destination:", destination
+		recipe.img_url = destination.replace("/home/vagrant/src/project", "")
 
 	form_title = request.form.get('title')
 
@@ -251,16 +273,27 @@ def show_favorite_recipes():
 	return render_template("user_favorite.html", user_id=user_id, favorites=favorites)
 
 
-@app.route('/add_to_favorite/<recipe_id>')
+@app.route('/add_to_favorite/<int:recipe_id>')
 def add_to_favorite(recipe_id):
 	"""Adds recipe to user's personal collection. """
 
 	user_id = session['logged_in_user']
 
+	# favorites = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).all()
 
-	favorite = Favorite(recipe_id=recipe_id, user_id=user_id)
-	db.session.add(favorite)
-	db.session.commit()
+	user_favorite = User.query.get(user_id)
+	#[<Favorite favorite_id=1, user_id=1, recipe_id=1>, <Favorite favorite_id=3, user_id=1, recipe_id=6>]
+	user_favorites_list = user_favorite.favorites
+	user_favorits_recipe_ids = [favorite.recipe_id for favorite in user_favorites_list]
+
+	
+	if recipe_id not in user_favorits_recipe_ids:
+		favorite = Favorite(recipe_id=recipe_id, user_id=user_id)
+		db.session.add(favorite)
+		db.session.commit()
+		flash("Added to favorites.")
+	else:
+		flash("The recipe is in favprites already.")	
 
 
 	return redirect('/favorites')
@@ -375,14 +408,36 @@ def show_new_recipe_form():
 	return render_template("add_new_recipe.html")
 
 
+@app.route('/uploads/<filename>')
+def send_image(filename):
+    
+    return send_from_directory('uploads/', filename)
+
 
 @app.route('/add_new_recipe', methods=['POST'])
 def add_new_recipe():
 	"""Add new recipe to db."""
 
 
+	target = os.path.join(APP_ROOT, 'uploads/')
+
+	if not os.path.isdir(target):
+		os.mkdir(target)
+	for upload in request.files.getlist('file'):
+		filename = upload.filename
+		#Verifys if files are supported
+		ext = os.path.splitext(filename)[1]
+		if ext in ALLOWED_EXTENSIONS:
+			flash('File extension supported.')
+		else:
+			flash('Upload a valid file.')
+		destination = "/".join([target, filename])
+		upload.save(destination)
+
+
 	user_id = session['logged_in_user']
-	img_url = request.form.get('img_url')
+	img_url = "/uploads/" + filename
+	
 	title = request.form.get('title')
 	occasion = request.form.get('occasion').lower()
 
@@ -419,7 +474,10 @@ def add_new_recipe():
 
 	db.session.commit()
 
-	return redirect("/user_profile/{}".format(user_id))
+	recipe = Recipe.query.filter_by(rname=title, style=description).first()
+
+	
+	return render_template('new_recipe.html', img_name=filename, recipe=recipe)
 
 
 
