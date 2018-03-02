@@ -7,12 +7,14 @@
 
 <h4> {{ recipe.rname }} </h4>
 
+<div></div>
+
 {% if avg_score %}
 	<p>Average score for this recipe is: {{ avg_score|round(1, 'ceil') }}</p>
 {% endif %}
 
 {% if user_rating %}
-	<p> Your scor for this recipe is: {{ user_rating.score }}  </p>
+	<p> <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>Your scor for this recipe is: {{ user_rating.score }}  </p>
 {%  endif %}
 	
 {% if 'logged_in_user' in session %}
@@ -31,7 +33,7 @@
 
 
 
-<p> <img src={{ recipe.img_url }} height="100" width="100"/></p>
+<p> <img class="image" src={{ recipe.img_url }} /></p>
 <p> Occasion: {{ recipe.occasions[0].oname }}</p>
 <p> Description: {{ recipe.style }}</p>
 <p> Ingridients: {% for ingridient in recipe.ingridients %}
@@ -65,3 +67,5 @@
 	<button><a href="/">Back</a></button>
 {% endif %}
 {% endblock %} 
+
+

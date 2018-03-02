@@ -15,6 +15,15 @@ $('.multi-item-carousel .item').each(function(){
   if (next.next().length>0) {
     next.next().children(':first-child').clone().appendTo($(this));
   } else {
-  	$(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+    $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
   }
 });
+
+
+
+  // console.log("here");
+  // $('i:lt(4)').removeClass("fa-star");
+  // $('i:lt(4)').addClass("fa-star-o");
+
+// $('div').raty({score: 3 });
+

@@ -1,26 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
-
-<form method='POST' action="/add_new_recipe" enctype="multipart/form-data">
-	<p>Upload image<input type='file' name='file'  accept="image/*" multiple> </p>
-	<p>Cake title: <input type='text' name='title'></p>
-	<p>Occasion: <input type='text' name='occasion'></p>
-	<p>Description: <input type='text' name='description'></p>
-	<p>Ingredients: <input type='checkbox' name='ingridients' value='buttercream'>Buttercream
-					<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
-					<input type='checkbox' name='ingridients' value='ganache'>Ganache
-					<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
-					<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
-	<p>Instructions: <input type='text' name='instructions'></p>
-	<p>Tools: <input type='checkbox' name='tools' value='cake_turntable'>Cake_turntable
-			  <input type='checkbox' name='tools' value='decorating_kit'>Decorating_kit
-			  <input type='checkbox' name='tools' value='icing_comb'>Icing_comb</p>
-	<input type='submit' value='Save'>
-	<input type='submit' value='Cancel'>
-
-</form>
-
-
+<div class="container">
+	<div class="row">
+		<form method='POST' action="/add_new_recipe" enctype="multipart/form-data">			
+			  	<div class="col-xs-4">
+			  		<label class="add-photo">Upload image<input type='file' name='file'  accept="image/*" multiple> <i class="fas fa-camera" id="upload-icon"></i></label>
+			  	</div>
+			  	<div class="col-xs-8">
+			  		<div class="add-recipe">
+						<p>Cake title: <input type='text' name='title'></p>
+						<p>Occasion: <input type='text' name='occasion'></p>
+						<p>Description: <input type='text' name='description'></p>
+						<p>Ingredients: <input type='checkbox' name='ingridients' value='buttercream'>Buttercream
+										<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
+										<input type='checkbox' name='ingridients' value='ganache'>Ganache
+										<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
+										<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
+						<p>Instructions: <textarea col="10" type='text' name='instructions'></textarea></p>
+						<p>Tools: <input type='checkbox' name='tools' value='cake_turntable'>Cake_turntable
+								  <input type='checkbox' name='tools' value='decorating_kit'>Decorating_kit
+								  <input type='checkbox' name='tools' value='icing_comb'>Icing_comb</p>
+					
+					
+						<input type='submit' value='Save'>
+						<input type='submit' value='Cancel'>
+					</div>
+			  	</div>			
+		</form>
+	</div>
+</div>
 {% endblock %}

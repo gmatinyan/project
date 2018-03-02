@@ -16,13 +16,13 @@
 		      		{% if i == 0 %}
 		      			<div class="item active">
 		      				<div class="col-xs-4">
-							<h3> {{ recipes[0].rname }}</h3> <br>
+							<h3 class="recipe-title"> {{ recipes[0].rname }}</h3> <br>
 							<a href="/recipe/{{ recipes[0].recipe_id }}"> <img src={{ recipes[0].img_url }} class="img-responsive"/></a></div>
 						</div>
 					{% else %}
 						<div class="item">
 							<div class="col-xs-4">
-							<h3> {{ recipe.rname }} </h3><br>
+							<h3 class="recipe-title"> {{ recipe.rname }} </h3><br>
 							<a href="/recipe/{{ recipe.recipe_id }}"> <img src={{ recipe.img_url }} class="img-responsive"/></a></div>
 						</div>
 					{% endif %}
@@ -41,7 +41,7 @@
 
 
 {% if 'logged_in_user' in session %}
-	<a href="/add_new_recipe"><button>Add new recipe</button></a>
+	<a href="/add_new_recipe"><button class="new-recipe-button">Add new recipe</button></a>
 {% endif %}
 
 {% endblock %}
