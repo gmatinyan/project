@@ -1,7 +1,32 @@
+.stars-outer {
+  display: inline-block;
+  position: relative;
+  font-family: FontAwesome;
+}
 
+.stars-outer::before {
+  content: "\f006 \f006 \f006 \f006 \f006";
+  color: #ccc;
+}
 
+.stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
 
+.stars-inner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  color: #f8ce0b;
+}
 
+.sharedrating {
+  text-align: center;
+
+}
 
 
 h2 {
@@ -10,10 +35,68 @@ h2 {
   font-weight: bold;
 }
 
-.rating {
+.image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  height: 250px;
+  width: 250px; 
+}
+
+.center{
   text-align: center;
 }
 
+@media(max-width: 480px) {
+  .center {
+    text-align: center;
+  }
+}
+
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    width: 8em;
+}
+
+.rating input {
+    position: absolute;
+    left: -999999px;
+}
+
+.rating label {
+    display: inline-block;
+    font-size: 0;
+}
+
+.rating > label:before {
+    position: relative;
+    font: 18px/1 FontAwesome;
+    display: block;
+    content: "\f005";
+    color: #ccc;
+    background: -webkit-linear-gradient(-45deg, #d9d9d9 0%, #b3b3b3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.rating > label:hover:before,
+.rating > label:hover ~ label:before,
+.rating > label.selected:before,
+.rating > label.selected ~ label:before {
+    color: #f8ce0b;
+    background: -webkit-linear-gradient(-45deg, #fcb551 0%, #d69a45 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+
+/*.rating {
+  text-align: center;
+}
+*/
 
 .page-footer {
   font-size: 13px;

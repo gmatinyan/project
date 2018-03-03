@@ -2,22 +2,44 @@
 {% block content %}
 
 
-
-<h3>Cake details</h3>
-
-<h4> {{ recipe.rname }} </h4>
+<h2> {{ recipe.rname }} </h2>
 
 <div></div>
 
 {% if avg_score %}
-	<p>Average score for this recipe is: {{ avg_score|round(1, 'ceil') }}</p>
-{% endif %}
+	<div class="sharedrating">
+		<div class="stars-outer">
+      		<div class="stars-inner"></div>
+    	</div>
+    </div>
+        
+    <script type="text/javascript">
+    	const scores = {
+			sharedrating : {{ avg_score|round(1, 'ceil') }}
+			};
+
+	</script>
+
+ {% endif %}
 
 {% if user_rating %}
-	<p> <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>Your scor for this recipe is: {{ user_rating.score }}  </p>
+	<p> 
+		<div class="personalrating">
+			<div class="stars-outer">
+          		<div class="stars-inner"></div>
+          	</div>
+        </div>Your rating for this recipe is: {{ user_rating.score }}  </p>
+        <script type="text/javascript">
+        	const scores ={
+        		personalrating : {{ user_rating.score }}
+        	}
+    	</script>
 {%  endif %}
+
+<p class="center"> Occasion: {{ recipe.occasions[0].oname }}</p>
+<p class="center"> Description: {{ recipe.style }}</p>
 	
-{% if 'logged_in_user' in session %}
+<!-- {% if 'logged_in_user' in session %}
 	<p>Rate this recipe
 	<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
 		<select name="ratings">
@@ -29,28 +51,55 @@
 		</select>
 		<input type="submit" value="Rate">
 	</form> </p>
+{% endif %} -->
+
+{% if 'logged_in_user' in session %}
+	<p>Rate this recipe
+		<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
+			<div class="rating">
+				<label><input type="radio" name="score" value="1" title="1 stars">1</option></label>
+				<label><input type="radio" name="score" value="2" title="2 stars">2</option></label>
+				<label><input type="radio" name="score" value="3" title="3 stars">3</option></label>
+				<label><input type="radio" name="score" value="4" title="4 stars">4</option></label>
+				<label><input type="radio" name="score" value="5" title="5 stars">5</option></label>				
+			</div>
+			<input type="submit" value="Rate">
+		</form> 
+	</p>
+
+	<script type="text/javascript">
+		$('.rating input').change(function () {
+		  var $radio = $(this);
+		$('.rating .selected').removeClass('selected');
+		$radio.closest('label').addClass('selected');
+		});
+
+	</script>
 {% endif %}
 
 
 
 <p> <img class="image" src={{ recipe.img_url }} /></p>
-<p> Occasion: {{ recipe.occasions[0].oname }}</p>
-<p> Description: {{ recipe.style }}</p>
-<p> Ingridients: {% for ingridient in recipe.ingridients %}
-						<ul>
-							<li>{{ ingridient.iname }}</li>
+<div class="container">
+	<div class="row">
+		<div class="center col-xs-12 col-md-4 col-lg-4"> Tools: {%  for tool in recipe.tools %}
+						<ul >
+							<li>{{ tool.tname }}</li>
 						</ul>
-				  {% endfor %}
-</p>	
+				   {% endfor %}
+		</div>
+		<div class="center col-xs-12 col-md-4 col-lg-4"> Ingridients: {% for ingridient in recipe.ingridients %}
+								<ul>
+									<li>{{ ingridient.iname }}</li>
+								</ul>
+						  {% endfor %}
+		</div>	
 
-<p>Instructions: {{ recipe.instructions }}</p>
+		<div class="center col-xs-12 col-md-4 col-lg-4"> Instructions: {{ recipe.instructions }}</div>
+	</div>
+</div>
 
-<p> Tools: {%  for tool in recipe.tools %}
-				<ul>
-					<li>{{ tool.tname }}</li>
-				</ul>
-		   {% endfor %}
-</p>
+
 
 {% if 'logged_in_user' in session and session['logged_in_user'] == recipe.user_id %}
 	<p><a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a></p>
@@ -65,7 +114,29 @@
 	<button><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button>
 {% else %}
 	<button><a href="/">Back</a></button>
+
 {% endif %}
+
+
+
+<script>
+  
+window.onload = starbar(scores);
+	 
+function starbar (scores){
+    for (selector in scores) {
+	    const starTotal = 5;
+	    const starPercentage = (scores[selector] / starTotal) * 100;
+	    const starPercentageRounded = `${(Math.round(starPercentage / 10) * 10)}%`;
+	    document.querySelector(`.${selector} .stars-inner`).style.width = starPercentageRounded; 
+	      //$(".stars-inner").css('width', starPercentageRounded )
+    }
+  }
+</script>
+
+
+
+
 {% endblock %} 
 
 

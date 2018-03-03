@@ -20,10 +20,4 @@ $('.multi-item-carousel .item').each(function(){
 });
 
 
-
-  // console.log("here");
-  // $('i:lt(4)').removeClass("fa-star");
-  // $('i:lt(4)').addClass("fa-star-o");
-
-// $('div').raty({score: 3 });
-
+ 

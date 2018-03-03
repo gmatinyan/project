@@ -381,8 +381,9 @@ def detaild_cake_view(recipe_id):
 def add_rating(recipe_id):
 	"""Adding/Editing rating."""
 
-	score = request.form.get('ratings')
+	score = 6 - int(request.form.get('score'))
 	user_id = session['logged_in_user']
+	print score
 
 	rating = Rating.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
 
