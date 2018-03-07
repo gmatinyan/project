@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Cakemania</title>
+	<title>CakeTopia</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	
@@ -40,7 +40,7 @@
 	</div>
 
 
-	<nav class="navbar navbar-default">
+	<nav class="navbar">
 	  	<div class="container-fluid">
 	    <!-- Brand and toggle get grouped for better mobile display -->
 	    <div class="navbar-header">
@@ -73,12 +73,12 @@
           							<h4 class="modal-title">Log in</h4>
         						</div>
         						<div class="modal-body">
-          							<form action='/login' method='POST'>
+          							<form id="login-form" action='/login' method='POST'>
 										<dl>
 											<dt>Email: 
-											<dd><input type='email' name='email' required>
+											<dd><input type='email' name='email' id="email-field" required>
 											<dt>Password: 
-											<dd><input type='password' name='password' required>
+											<dd><input type='password' name='password' id="password-field" required>
 											<p><dd><input type='submit' value='LOGIN'></p>
 										</dl>
 									</form>
@@ -122,6 +122,7 @@
 
 
           			<script>
+          			
 						$(document).ready(function(){
 						    $("#loginLink").click(function(){
 						        $("#loginModal").modal({backdrop: true});
@@ -129,14 +130,14 @@
 						    $("#registerLink").click(function(){
 						        $("#registerModal").modal({backdrop: true});
 						    });
-						 
+						
+
 					</script>
 
-		        {% else %}	
-		        	<p class="navbar-text">My account</p>     
+		        {% else %}		        		        	  
 			    	<li><a href="/user_recipes">My recipes</a></li>
 			    	<li><a href="/favorites">My favorite recipes</a></li>
-			    	<li><a href="/logout">Log Out</a></li>
+			    	<li><a href="/logout">Log Out</a></li>			   
 				{% endif %}
 
 		      </ul>
@@ -145,6 +146,7 @@
 	</nav>
 
 	{% block content %} put your content here {% endblock %}
+	<footer>
 	<div class="page-footer">
 		<div class="container">
 			<div class="row">
@@ -156,6 +158,7 @@
 			</div>
 		</div>
 	</div>
+	</footer>
 
 <script src="/static/js/custom.js"></script>
 </body>

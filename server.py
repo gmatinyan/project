@@ -84,17 +84,17 @@ def login_process():
 	if user:
 		if password == user.password:
 			session['logged_in_user'] = user.user_id
-			flash("Logged in")
+			#flash("Logged in")
 			return redirect("/user_profile/{}".format(user.user_id))
 		elif password != user.password:
-			flash("Incorrect password.")
+			#flash("Incorrect password.")
 			return redirect('/login')
 		else:
-			flash("Login failed")
+			#flash("Login failed")
 			return redirect("/login")
 
 	else:
-		flash("You are not yet registered")
+		#flash("You are not yet registered")
 		return redirect ("/register")
 
 
@@ -169,10 +169,10 @@ def edit_user_recipe(recipe_id):
 			print 'filename:', filename
 			#Verifys if files are supported
 			ext = os.path.splitext(filename)[1]
-			if ext in ALLOWED_EXTENSIONS:
-				flash('File extension supported.')
-			else:
-				flash('Upload a valid file.')
+			#if ext in ALLOWED_EXTENSIONS:
+				#flash('File extension supported.')
+			#else:
+				#flash('Upload a valid file.')
 			destination = "".join([target, filename])
 			upload.save(destination)
 			print "destination:", destination
@@ -291,9 +291,9 @@ def add_to_favorite(recipe_id):
 		favorite = Favorite(recipe_id=recipe_id, user_id=user_id)
 		db.session.add(favorite)
 		db.session.commit()
-		flash("Added to favorites.")
-	else:
-		flash("The recipe is in favprites already.")	
+		#flash("Added to favorites.")
+	#else:
+		#flash("The recipe is in favprites already.")	
 
 
 	return redirect('/favorites')
@@ -318,7 +318,7 @@ def logout():
 	"""Log out user."""
 
 	session.clear()
-	flash("Logged out.")
+	#flash("Logged out.")
 	return redirect('/')
 
 
@@ -346,10 +346,10 @@ def verify_user():
 		db.session.add(new_user)
 		db.session.commit()
 		session['logged_in_user'] = new_user.user_id
-		flash("Registerd.")
+		#flash("Registerd.")
 		return redirect("/user_profile/{}".format(new_user.user_id))
 	else:
-		flash("Please log in, you've already had account.")
+		#flash("Please log in, you've already had account.")
 		return redirect('/login')
 
 
@@ -389,10 +389,10 @@ def add_rating(recipe_id):
 
 	if rating:
 		rating.score = score
-		flash("Rating updated.")
+		#flash("Rating updated.")
 	else:
 		rating = Rating(recipe_id=recipe_id, user_id=user_id, score=score)
-		flash("Rating added.")
+		#flash("Rating added.")
 		db.session.add(rating)
 	
 	db.session.commit()
@@ -428,10 +428,10 @@ def add_new_recipe():
 		filename = upload.filename
 		#Verifys if files are supported
 		ext = os.path.splitext(filename)[1]
-		if ext in ALLOWED_EXTENSIONS:
-			flash('File extension supported.')
-		else:
-			flash('Upload a valid file.')
+		#if ext in ALLOWED_EXTENSIONS:
+			#flash('File extension supported.')
+		#else:
+			#flash('Upload a valid file.')
 		destination = "/".join([target, filename])
 		upload.save(destination)
 

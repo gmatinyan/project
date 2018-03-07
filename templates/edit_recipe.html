@@ -1,29 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3> Here are the recipe that you have now</h3>
+<h2> Here are the recipe that you have now</h2>
 
-<form method='POST' action="/edit_recipe/{{ recipe_id }}" enctype="multipart/form-data">
-	
-	<p>Edit image<input type='file' name='file' accept="image/*" multiple> </p>
-	<p>Edit cake title: <input type='text' name='title' value='{{ edit.rname }}'></p>
-	<p>Edit occasion: <input type='text' name='occasion' value='{{ edit_occasion.oname }}'></p>
-	<p>Edit description: <input type='text' name='description' value='{{ edit.style }}'></p>
-	<p>Edit ingredients: <input type='checkbox' name='ingridients' value='buttercream' {% if 'buttercream' in ingridient_names %}
-					checked {% endif %}>Buttercream
-					<input type='checkbox' name='ingridients' value='whipped_cream' {% if 'whipped_cream' in ingridient_names %}
-					checked {% endif %}>Whipped_cream
-					<input type='checkbox' name='ingridients' value='ganache' {% if 'ganache' in ingridient_names %}
-					checked {% endif %}>Ganache
-					<input type='checkbox' name='ingridients' value='royal_icing' {% if 'royal_icing' in ingridient_names %}
-					checked {%  endif %}>Royal_icing
-					<input type='checkbox' name='ingridients' value='fondant' {% if 'fondant' in ingridient_names %}
-					checked {%  endif %}>Fondant</p>
-	<p>Edit instructions: <input type='text' name='instructions' value='{{ edit.instructions }}'></p>
-	<p>Edit tools: <input type='checkbox' name='tools' value='cake_turntable' {% if 'cake_turntable' in tool_names %} checked {% endif %}>Cake_turntable
-			  <input type='checkbox' name='tools' value='decorating_kit' {% if 'decorating_kit' in tool_names %} checked {% endif %}>Decorating_kit
-			  <input type='checkbox' name='tools' value='icing_comb' {% if 'icing_comb' in tool_names %} checked {% endif %}>Icing_comb</p>
-	<input type='submit' value='Save'>
-
-</form>
+		
+<div class="container">
+	<div class="row">
+		<form method='POST' action="/edit_recipe/{{ recipe_id }}" enctype="multipart/form-data">
+			<div class="col-xs-12 col-md-4">		
+				<label class="add-photo">Edit image<input type='file' name='file' accept="image/*" multiple><i class="fas fa-camera" id="upload-icon"></i></label>
+			</div>
+			<div class="col-xs-12 col-md-6">
+				<div class="add-recipe">
+					<p><input placeholder="Edit cake title" type='text' name='title' class="recipe-input" value='{{ edit.rname }}'></p>
+					<p><input placeholder="Edit occasion" type='text' name='occasion' class="recipe-input" value='{{ edit_occasion.oname }}'></p>
+					<p><input placeholder="Edit description" type='text' name='description' class="recipe-input" value='{{ edit.style }}'></p>
+					<p style="text-align: center;">Edit ingredients:</p> <p><input type='checkbox' name='ingridients' value='buttercream' {% if 'buttercream' in ingridient_names %}
+									checked {% endif %}>Buttercream
+									<input type='checkbox' name='ingridients' value='whipped_cream' {% if 'whipped_cream' in ingridient_names %}
+									checked {% endif %}>Whipped_cream
+									<input type='checkbox' name='ingridients' value='ganache' {% if 'ganache' in ingridient_names %}
+									checked {% endif %}>Ganache
+									<input type='checkbox' name='ingridients' value='royal_icing' {% if 'royal_icing' in ingridient_names %}
+									checked {%  endif %}>Royal_icing
+									<input type='checkbox' name='ingridients' value='fondant' {% if 'fondant' in ingridient_names %}
+									checked {%  endif %}>Fondant</p>
+					<p><input placeholder="Edit instructions" col="10" type='text' class="recipe-input" name='instructions' value='{{ edit.instructions }}'></p>
+					<p style="text-align: center;">Edit tools:</p><p><input type='checkbox' name='tools' value='cake_turntable' {% if 'cake_turntable' in tool_names %} checked {% endif %}>Cake_turntable
+							  <input type='checkbox' name='tools' value='decorating_kit' {% if 'decorating_kit' in tool_names %} checked {% endif %}>Decorating_kit
+							  <input type='checkbox' name='tools' value='icing_comb' {% if 'icing_comb' in tool_names %} checked {% endif %}>Icing_comb</p>
+					<input class="btn btn-default" type='submit' value='Save'>
+					<input class="btn btn-default" type='submit' value='Cancel'>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 
 {% endblock %}

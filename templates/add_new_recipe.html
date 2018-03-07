@@ -3,28 +3,31 @@
 
 <div class="container">
 	<div class="row">
+		<h2>Add new recipe</h2>
 		<form method='POST' action="/add_new_recipe" enctype="multipart/form-data">			
-			  	<div class="col-xs-4">
+			  	<div class="col-xs-12 col-md-4">
 			  		<label class="add-photo">Upload image<input type='file' name='file'  accept="image/*" multiple> <i class="fas fa-camera" id="upload-icon"></i></label>
 			  	</div>
-			  	<div class="col-xs-8">
+			  	<div class="col-xs-12 col-md-6">
 			  		<div class="add-recipe">
-						<p>Cake title: <input type='text' name='title'></p>
-						<p>Occasion: <input type='text' name='occasion'></p>
-						<p>Description: <input type='text' name='description'></p>
-						<p>Ingredients: <input type='checkbox' name='ingridients' value='buttercream'>Buttercream
-										<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
-										<input type='checkbox' name='ingridients' value='ganache'>Ganache
-										<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
-										<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
-						<p>Instructions: <textarea col="10" type='text' name='instructions'></textarea></p>
-						<p>Tools: <input type='checkbox' name='tools' value='cake_turntable'>Cake_turntable
-								  <input type='checkbox' name='tools' value='decorating_kit'>Decorating_kit
-								  <input type='checkbox' name='tools' value='icing_comb'>Icing_comb</p>
+						<p><input placeholder="Cake title" type='text' name='title' class="recipe-input"></p>
+						<p><input placeholder="Occasion" type='text' name='occasion' class="recipe-input"></p>
+						<p><input placeholder="Description" type='text' name='description' class="recipe-input"></p>
+						<p style="text-align: center;">Ingredients:</p> 
+							<p><input type='checkbox' name='ingridients' value='buttercream'>Buttercream
+							<input type='checkbox' name='ingridients' value='whipped_cream'>Whipped_cream
+							<input type='checkbox' name='ingridients' value='ganache'>Ganache
+							<input type='checkbox' name='ingridients' value='royal_icing'>Royal_icing
+							<input type='checkbox' name='ingridients' value='fondant'>Fondant</p>
+						<p><textarea placeholder="Instructions" col="20" type='text' name='instructions' class="recipe-input"></textarea></p>
+						<p style="text-align: center;">Tools:</p> 
+							<p><input type='checkbox' name='tools' value='cake_turntable'>Cake_turntable
+							<input type='checkbox' name='tools' value='decorating_kit'>Decorating_kit
+							<input type='checkbox' name='tools' value='icing_comb'>Icing_comb</p>
 					
 					
-						<input type='submit' value='Save'>
-						<input type='submit' value='Cancel'>
+						<input class="btn btn-default" type='submit' value='Save'>
+						<input class="btn btn-default" type='submit' value='Cancel'>
 					</div>
 			  	</div>			
 		</form>

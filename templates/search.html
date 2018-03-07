@@ -1,10 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
-{% for recipe in search_results %}
-	<p> {{ recipe.rname }} <a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
-{% endfor %}
+<h2>Your seach result</h2>
+<div calss="container">
+	<div class="row">
+		{% for recipe in search_results %}
+			<div class="center col-xs-12 col-sm-6 col-md-3 col-lg-3">
+				<h3 class="recipe-title change-color">{{ recipe.rname }}</h3> 
+				<p><a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
+			</div>
+		{% endfor %}
+	</div>
+</div>
 
 
 

@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>my favorite recipes</h3>
 
 
-{% for favorite in favorites %}
-	<p>  {{ favorite.recipe_favorite.rname }} <a href="/recipe/{{ favorite.recipe_favorite.recipe_id }}"> <img src={{ favorite.recipe_favorite.img_url }} height="100" width="100" /></a>
-	<a href="/delete_from_favorites/{{ favorite.recipe_favorite.recipe_id }}">Delete</a></p>
-{% endfor %}
+<div class="container shift-down">
+	<div class="row">
+		<h2>my favorite recipes</h2>
+		{% for favorite in favorites %}
+			<div class="center col-xs-12 col-md-3 col-lg-3"> 
+				<p class="change-color">{{ favorite.recipe_favorite.rname }}</p>
+				<p><a href="/recipe/{{ favorite.recipe_favorite.recipe_id }}"> <img src={{ favorite.recipe_favorite.img_url }} height="100" width="100" /></a></p>
+				<p><a href="/delete_from_favorites/{{ favorite.recipe_favorite.recipe_id }}">Delete</a></p>
+			</div>
+		{% endfor %}
+	</div>
+</div>
 
-<button><a href="/user_profile/{{ user_id }}">Back</a></button>
+<!-- <button><a href="/user_profile/{{ user_id }}">Back</a></button> -->
 
 
 {% endblock %}

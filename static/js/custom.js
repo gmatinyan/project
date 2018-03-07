@@ -1,3 +1,5 @@
+"use strict";
+
 // Instantiate the Bootstrap carousel
 $('.multi-item-carousel').carousel({
   interval: false
@@ -18,6 +20,30 @@ $('.multi-item-carousel .item').each(function(){
     $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
   }
 });
+
+
+// function showLoginResult(result) {
+//   ("submit").click(function(){
+//     $("#user-menu").toggle();
+//   });
+//   alert("logged in")
+// }
+
+// function submitLogin (evt) {
+//   evt.preventDefault();
+
+//   let formInputs = {
+//     "email" : $("#email-field").val(),
+//     "password" : $("#password-field").val(),
+//   };
+
+//   $.post( "/login", 
+//       formInputs, 
+//       showLoginResult
+//       );
+// }
+
+// $("#login-form").on("submit", submitLogin);
 
 
  

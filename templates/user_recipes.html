@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>My recipes</h3>
+
+<div class="container shift-down">
+	<h2>My recipes        
+		{% if 'logged_in_user' in session %}
+			<span><a href="/add_new_recipe"><i class="fas fa-plus" style="font-size: 20px; margin-left: 10px;"></i></a></span>
+		{% endif %}
+	</h2>
+	
+
+	<div class="row">
+		{% for recipe in user_recipes %}
+			<div class="center col-xs-12 col-md-3 col-lg-3"> 
+				<p class="change-color">{{ recipe.rname }}</p> 
+				<p><a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
+				<p><a href="/edit_recipe/{{ recipe.recipe_id }}"><i class="fas fa-pencil-alt"></i>Edit</a></p>
+			</div>
+		{% endfor %}
+	</div>
+</div>
 
 
-{% for recipe in user_recipes %}
-	<p> {{ recipe.rname }} <a href="/recipe/{{recipe.recipe_id}}"> <img src={{ recipe.img_url }} height="100" width="100" /></a></p>
-	<a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a>
-{% endfor %}
 
-
-{% if 'logged_in_user' in session %}
-	<p><button><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button></p>
+<!-- {% if 'logged_in_user' in session %}
+	<p><button class="btn btn-default"><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button></p>
 {% endif %}
-
+ -->
 
 {% endblock %}

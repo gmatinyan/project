@@ -4,7 +4,21 @@
 
 <h2> {{ recipe.rname }} </h2>
 
-<div></div>
+{% if user_rating %} 
+	<div class="personalrating">
+		<div class="stars-outer">
+      		<div class="stars-inner"></div>
+      	</div>
+    </div>
+
+    <!-- Your rating for this recipe is: {{ user_rating.score }} --> 
+    <script type="text/javascript">
+        	const scores ={
+        		personalrating : {{ user_rating.score }}
+        	}
+    </script>      
+        
+{%  endif %}
 
 {% if avg_score %}
 	<div class="sharedrating">
@@ -22,100 +36,101 @@
 
  {% endif %}
 
-{% if user_rating %}
-	<p> 
-		<div class="personalrating">
-			<div class="stars-outer">
-          		<div class="stars-inner"></div>
-          	</div>
-        </div>Your rating for this recipe is: {{ user_rating.score }}  </p>
-        <script type="text/javascript">
-        	const scores ={
-        		personalrating : {{ user_rating.score }}
-        	}
-    	</script>
-{%  endif %}
 
 <p class="center"> Occasion: {{ recipe.occasions[0].oname }}</p>
 <p class="center"> Description: {{ recipe.style }}</p>
 	
-<!-- {% if 'logged_in_user' in session %}
-	<p>Rate this recipe
-	<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
-		<select name="ratings">
-			<option value="1" name="score">1</option>
-			<option value="2" name="score">2</option>
-			<option value="3" name="score">3</option>
-			<option value="4" name="score">4</option>
-			<option value="5" name="score">5</option>
-		</select>
-		<input type="submit" value="Rate">
-	</form> </p>
-{% endif %} -->
 
-{% if 'logged_in_user' in session %}
-	<p>Rate this recipe
-		<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
-			<div class="rating">
-				<label><input type="radio" name="score" value="1" title="1 stars">1</option></label>
-				<label><input type="radio" name="score" value="2" title="2 stars">2</option></label>
-				<label><input type="radio" name="score" value="3" title="3 stars">3</option></label>
-				<label><input type="radio" name="score" value="4" title="4 stars">4</option></label>
-				<label><input type="radio" name="score" value="5" title="5 stars">5</option></label>				
-			</div>
-			<input type="submit" value="Rate">
-		</form> 
-	</p>
 
-	<script type="text/javascript">
-		$('.rating input').change(function () {
-		  var $radio = $(this);
-		$('.rating .selected').removeClass('selected');
-		$radio.closest('label').addClass('selected');
-		});
-
-	</script>
+<div class="favorite"> 
+	<img class="image" src={{ recipe.img_url }} />
+	<div class="top-right">
+		{% if 'logged_in_user' in session %}
+			<a href="/add_to_favorite/{{ recipe.recipe_id }}"><i class="fas fa-heart"></i></i></a>
+		{% endif %}
+		{% if 'logged_in_user' in session and session['logged_in_user'] == recipe.user_id %}
+	<p><a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a></p>
 {% endif %}
+	</div>
+</div>
 
 
 
-<p> <img class="image" src={{ recipe.img_url }} /></p>
+
 <div class="container">
 	<div class="row">
-		<div class="center col-xs-12 col-md-4 col-lg-4"> Tools: {%  for tool in recipe.tools %}
+		<div class="col-xs-12 col-md-3 col-lg-3 shape"> Tools: {%  for tool in recipe.tools %}
 						<ul >
 							<li>{{ tool.tname }}</li>
 						</ul>
 				   {% endfor %}
 		</div>
-		<div class="center col-xs-12 col-md-4 col-lg-4"> Ingridients: {% for ingridient in recipe.ingridients %}
+		<div class="col-xs-12 col-md-3 col-lg-3 shape"> 
+			Ingridients: {% for ingridient in recipe.ingridients %}
 								<ul>
 									<li>{{ ingridient.iname }}</li>
 								</ul>
 						  {% endfor %}
 		</div>	
 
-		<div class="center col-xs-12 col-md-4 col-lg-4"> Instructions: {{ recipe.instructions }}</div>
+		<div class="center col-xs-12 col-md-3 col-lg-3 shape"> 
+			<p>Instructions: </p><p>{{ recipe.instructions }}</p>
+		</div>
+
+
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="center-block">
+
+				{% if 'logged_in_user' in session %}
+					<p>Rate this recipe
+						<form action="/add-rating/{{ recipe.recipe_id }}" method="POST">
+							<div class="rating">
+								<label><input type="radio" name="score" value="1" title="1 stars">1</option></label>
+								<label><input type="radio" name="score" value="2" title="2 stars">2</option></label>
+								<label><input type="radio" name="score" value="3" title="3 stars">3</option></label>
+								<label><input type="radio" name="score" value="4" title="4 stars">4</option></label>
+								<label><input type="radio" name="score" value="5" title="5 stars">5</option></label>				
+							</div>
+							<input type="submit" value="Rate">
+						</form> 
+					</p>
+
+					<script type="text/javascript">
+						$('.rating input').change(function () {
+						  var $radio = $(this);
+						$('.rating .selected').removeClass('selected');
+						$radio.closest('label').addClass('selected');
+						});
+
+					</script>
+				{% endif %}
+			</div>
+		</div>
 	</div>
 </div>
 
 
 
-{% if 'logged_in_user' in session and session['logged_in_user'] == recipe.user_id %}
+
+
+
+
+<!-- {% if 'logged_in_user' in session and session['logged_in_user'] == recipe.user_id %}
 	<p><a href="/edit_recipe/{{ recipe.recipe_id }}">Edit</a></p>
-{% endif %}
-
-{% if 'logged_in_user' in session %}
-	<p><a href="/add_to_favorite/{{ recipe.recipe_id }}">Add to favorites</a></p>
-{% endif %}
+{% endif %} -->
 
 
-{% if 'logged_in_user' in session %}
+
+
+<!-- {% if 'logged_in_user' in session %}
 	<button><a href="/user_profile/{{ session['logged_in_user'] }}">Back</a></button>
 {% else %}
 	<button><a href="/">Back</a></button>
 
-{% endif %}
+{% endif %} -->
 
 
 

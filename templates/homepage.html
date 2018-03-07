@@ -1,33 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h3>Welcome to CakeMania</h3>
 
 
-<div class="container">
-  <h2>Tranding cakes for today</h2>
+
+<div class="container shift-down" style="margin-bottom: 60px;">
+  <h1>Welcome to CakeTopia</h1>
+  <h2>Trending cakes for today</h2>
   <div class="row">
     <div class="col-md-12">
       <div class="carousel slide multi-item-carousel" id="theCarousel">
         <div class="carousel-inner">
 
-        	<div class="carousel-inner" role="listbox">
+        	
 		      	{% for i, recipe in enumerate(recipes) %}
 		      		{% if i == 0 %}
 		      			<div class="item active">
 		      				<div class="col-xs-4">
-							<h3 class="recipe-title"> {{ recipes[0].rname }}</h3> <br>
+							<h3 class="recipe-title change-color">{{ recipes[0].rname }}</h3>
 							<a href="/recipe/{{ recipes[0].recipe_id }}"> <img src={{ recipes[0].img_url }} class="img-responsive"/></a></div>
 						</div>
 					{% else %}
 						<div class="item">
 							<div class="col-xs-4">
-							<h3 class="recipe-title"> {{ recipe.rname }} </h3><br>
+							<h3 class="recipe-title change-color">{{ recipe.rname }} </h3>
 							<a href="/recipe/{{ recipe.recipe_id }}"> <img src={{ recipe.img_url }} class="img-responsive"/></a></div>
 						</div>
 					{% endif %}
 				{% endfor %}       
-		    </div>         
+		             
           
           <!--  Example item end -->
         </div>
@@ -40,8 +41,6 @@
 
 
 
-{% if 'logged_in_user' in session %}
-	<a href="/add_new_recipe"><button class="new-recipe-button">Add new recipe</button></a>
-{% endif %}
+
 
 {% endblock %}
