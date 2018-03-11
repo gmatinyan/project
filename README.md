@@ -52,11 +52,11 @@ Install dependencies:
 
 `$ pip install -r requirements.txt`
 
-Create your database tables and seed example data.
+Create your database tables and seed example data։
 
 `$ python model.py`
 
-Run the app/
+Run the app։
 
 `$ python server.py`
 
