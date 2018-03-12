@@ -38,7 +38,9 @@ To run this application on your local coputer please follow the below steps:
 
 Clone repository:
 
-`$ https://github.com/gmatinyan/project.git`
+```
+$ https://github.com/gmatinyan/project.git
+```
 
 Create a virtual environment:
 
