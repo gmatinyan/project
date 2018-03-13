@@ -72,5 +72,9 @@ Run the app։
 $ python server.py
 ```
 
-You can now navigate to 'localhost:5000/
+You can now navigate to 'localhost:5000/ to access CakeTopia
+
+## About me
+
+Gohar Matinyan is a Software Engineer in the Bay Area; this is her first project. Visit her on [LinkedIn](https://www.linkedin.com/in/gohar-matinyan/).
 
