@@ -44,23 +44,33 @@ $ https://github.com/gmatinyan/project.git
 
 Create a virtual environment:
 
-`$ virtualenv env`
+```
+$ virtualenv env
+```
 
 Activate the virtual environment:
 
-`$ source env/bin/activate`
+```
+$ source env/bin/activate
+```
 
 Install dependencies:
 
-`$ pip install -r requirements.txt`
+```
+$ pip install -r requirements.txt
+```
 
 Create your database tables and seed example data։
 
-`$ python model.py`
+```
+$ python model.py
+```
 
 Run the app։
 
-`$ python server.py`
+```
+$ python server.py
+```
 
 You can now navigate to 'localhost:5000/
 
