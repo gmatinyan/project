@@ -405,8 +405,9 @@ def add_rating(recipe_id):
 def show_new_recipe_form():
 	"""Shows add new recipe form"""
 
+	if "logged_in_user" in session:
 
-	return render_template("add_new_recipe.html")
+		return render_template("add_new_recipe.html")
 
 
 @app.route('/uploads/<filename>')
